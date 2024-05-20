@@ -50,6 +50,22 @@ const userSchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+  verification: {
+    type: Boolean,
+    default: false,
+  },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "companies",
+    required: true,
+  },
+  kudos: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "users",
+  },
+  logo: {
+    type: String,
+  },
 });
 
 const User = mongoose.model("users", userSchema);
