@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    unique: true,
     validate: {
       validator: function (v) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
@@ -40,6 +41,11 @@ const userSchema = mongoose.Schema({
   },
   situation: {
     type: String,
+    enum: [
+      "je me renseigne",
+      "je suis à l'écoute",
+      "je suis en recherche active",
+    ],
     trim: true,
   },
   likedCompanies: {
