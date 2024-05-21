@@ -21,7 +21,7 @@ const userSchema = mongoose.Schema({
   },
   birthDate: {
     type: Date,
-    required: true,
+    required: false,
   },
   adress: {
     type: String,
@@ -63,7 +63,7 @@ const userSchema = mongoose.Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "companies",
-    required: true,
+    required: false,
   },
   kudos: {
     type: [mongoose.Schema.Types.ObjectId],
