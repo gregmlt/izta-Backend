@@ -10,7 +10,7 @@ const companySchema = mongoose.Schema({
   description: {
     type: String,
     trim: true,
-    required: true,
+    // required: true,
   },
   website: {
     type: String,
@@ -32,47 +32,47 @@ const companySchema = mongoose.Schema({
     type: Number,
     required: true,
     trim: true,
-    validate: {
-      validator: function (v) {
-        return /^\d{9}$/.test(v.toString());
-      },
-      message: (props) => `${props.value} is not a valid SIREN number!`,
-    },
+    // validate: {
+    //   validator: function (v) {
+    //     return /^\d{9}$/.test(v.toString());
+    //   },
+    //   message: (props) => `${props.value} is not a valid SIREN number!`,
+    // },
   },
   siret: {
     type: Number,
     required: true,
     trim: true,
-    validate: {
-      validator: function (v) {
-        return /^\d{14}$/.test(v.toString());
-      },
-      message: (props) => `${props.value} is not a valid SIRET number!`,
-    },
+    // validate: {
+    //   validator: function (v) {
+    //     return /^\d{14}$/.test(v.toString());
+    //   },
+    //   message: (props) => `${props.value} is not a valid SIRET number!`,
+    // },
   },
   creationDate: {
     type: Date,
-    required: true,
+    // required: true,
     trim: true,
   },
   adress: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   city: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   postalCode: {
     type: Number,
-    required: true,
+    // required: true,
     trim: true,
   },
   employeeNumber: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   industry: {
@@ -106,6 +106,21 @@ const companySchema = mongoose.Schema({
   mecenat: {
     type: String,
     trim: true,
+  },
+  territorialScore: {
+    type: String,
+    set: (v) => v.toLowerCase(),
+    enum: ["", "a", "b", "c", "d", "e"],
+  },
+  socialScore: {
+    type: String,
+    set: (v) => v.toLowerCase(),
+    enum: ["", "a", "b", "c", "d", "e"],
+  },
+  fiscalScore: {
+    type: String,
+    set: (v) => v.toLowerCase(),
+    enum: ["", "a", "b", "c", "d", "e"],
   },
 });
 
