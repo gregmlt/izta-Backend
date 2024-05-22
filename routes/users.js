@@ -77,10 +77,6 @@ router.put("/infos/:token", (req, res) => {
   });
 });
 
-/* PUT users change Password. */
-
-router.put("/password/:token", (req, res) => {});
-
 // ? Like a company and add it in DB
 router.post("/like/:token/:idCompany", async (req, res) => {
   const companyId = req.params.idCompany;
@@ -104,14 +100,105 @@ router.post("/like/:token/:idCompany", async (req, res) => {
     if (user.likedCompanies.includes(companyId)) {
       // ** Dislike a company ** \\
       await User.updateOne({ token }, { $pull: { likedCompanies: companyId } });
+      await Company.updateOne(
+        { _id: companyId },
+        { $pull: { like: user["_id"] } }
+      );
       return res.json({ result: true, message: "Company disliked" });
     } else {
       // ** Like a company ** \\
       await User.updateOne({ token }, { $push: { likedCompanies: companyId } });
+      await Company.updateOne(
+        { _id: companyId },
+        { $push: { like: user["_id"] } }
+      );
       return res.json({ result: true, message: "Company liked" });
     }
   } catch (error) {
     console.error("Error liking/disliking company:", error);
+    return res
+      .status(500)
+      .json({ result: false, message: "Internal server error" });
+  }
+});
+
+// ? Search a company with his SIRET number
+
+router.get("/get/:siret", async (req, res) => {
+  const siret = req.params.siret;
+  try {
+    const response = await Company.findOne({ siret });
+    response
+      ? res.json({ result: true, message: response })
+      : res.json({ result: false, message: "company not found" });
+    return;
+  } catch (error) {
+    console.error("Error liking/disliking company:", error);
+    return res
+      .status(500)
+      .json({ result: false, message: "Internal server error" });
+  }
+});
+
+// ? Add a company to an user account
+
+router.post("/post/:siret/:token", async (req, res) => {
+  const siret = req.params.siret;
+  const token = req.params.token;
+
+  try {
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.json({ result: false, message: "User doesn't exist" });
+    }
+
+    const company = await Company.findOne({ siret });
+    const companyID = company["_id"];
+
+    if (user.company.includes(companyID)) {
+      return res.json({
+        result: false,
+        message: "User already owns this company",
+      });
+    }
+
+    const addCompany = await User.updateOne(
+      { token },
+      { $push: { company: companyID } }
+    );
+    return res.json({ result: true, message: "company successfully added" });
+  } catch (error) {
+    console.error("Error adding company to user account :", error);
+    return res
+      .status(500)
+      .json({ result: false, message: "Internal server error" });
+  }
+});
+
+// ? Add a company to user's kudos
+
+router.post("/post/kudos/:siret/:token", async (req, res) => {
+  const siret = req.params.siret;
+  const token = req.params.token;
+  try {
+    const user = await User.findOne({ token });
+
+    if (!user) {
+      return res.json({ result: false, message: "User doesn't exist" });
+    }
+
+    const company = await Company.findOne({ siret });
+    const companyID = company["_id"];
+
+    const response = await User.updateOne(
+      { token },
+      { $push: { kudos: companyID } }
+    );
+
+    return res.json({ result: true, message: "kudo added" });
+  } catch (error) {
+    console.error("Error adding kudos to user account :", error);
     return res
       .status(500)
       .json({ result: false, message: "Internal server error" });

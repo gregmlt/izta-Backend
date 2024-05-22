@@ -122,6 +122,8 @@ const companySchema = mongoose.Schema({
     set: (v) => v.toLowerCase(),
     enum: ["", "a", "b", "c", "d", "e"],
   },
+  kudos: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+  like: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
 });
 
 const company = mongoose.model("companies", companySchema);
