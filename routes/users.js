@@ -10,8 +10,6 @@ const bcrypt = require('bcrypt');
 
 /* POST signup users. */
 
-
-
 router.post('/signup', (req, res) => {
   if (!checkBody(req.body, ['firstname', 'lastname', 'email', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
@@ -28,7 +26,6 @@ router.post('/signup', (req, res) => {
         email: req.body.email,
         password: hash,
         token: uid2(32),
-    
 
       });
 
@@ -36,7 +33,6 @@ router.post('/signup', (req, res) => {
         res.json({ result: true });
       });
     } else {
-      // User already exists in database
       res.json({ result: false, error: 'User already exists' });
     }
   });
@@ -45,14 +41,14 @@ router.post('/signup', (req, res) => {
 /* POST signin users. */
 
 router.post('/signin', (req, res) => {
-  if (!checkBody(req.body, ['email', 'password'])) {
+  if (!checkBody(req.body, ['email', 'password']) ) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
 
-  User.findOne({ email: req.body.email, password: req.body.password }).then(data => {
-    if (data) {
-      res.json({ result: true });
+  User.findOne({ email: req.body.email, }).then(data => {
+    if (data && bcrypt.compareSync(req.body.password, data.password)) {
+      res.json({ result: true, token: data.token});
     } else {
       res.json({ result: false, error: 'Identifiant ou mot de passe erroné' });
     }
@@ -62,11 +58,20 @@ router.post('/signin', (req, res) => {
 
 /* PUT users data. */
 
-router.put('/user', (req, res) => {
-  User.updateOne({ token: req.body.token }, {...req.body}).then(data => { 
-        res.json({ result: true });
+router.put('/infos/:token', (req, res) => {
+  const { firstname, lastname, email, birthDate, adress, city, postalCode, diplome, situation, likedCompanies, kudos} = req.body;
   
+  User
+  .updateOne({ token: req.params.token }, {...req.body})
+  .then(() => { 
+    User.findOne({ token: req.params.token }).then((data) => res.json({ result: true, data: data }))    
   })
 });
+
+/* PUT users change Password. */
+
+router.put('/password/:token', (req, res) => {
+
+} )
 
 module.exports = router;
