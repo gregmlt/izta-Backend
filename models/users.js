@@ -48,10 +48,12 @@ const userSchema = mongoose.Schema({
     ],
     trim: true,
   },
-  likedCompanies: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "companies",
-  },
+  likedCompanies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "companies",
+    },
+  ],
   token: {
     type: String,
     trim: true,
@@ -65,10 +67,12 @@ const userSchema = mongoose.Schema({
     ref: "companies",
   },
 
-  kudos: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "users",
-  },
+  kudos: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "companies",
+    },
+  ],
   logo: {
     type: String,
   },
