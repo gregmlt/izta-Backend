@@ -37,6 +37,7 @@ const catchCompanies = async () => {
   try {
     const response = await fetch(
       "https://api.insee.fr/entreprises/sirene/V3.11/siret?q=trancheEffectifsEtablissement%3A%5B42%20TO%2053%5D&nombre=100",
+
       {
         headers: {
           Accept: "application/json",
