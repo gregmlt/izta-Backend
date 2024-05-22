@@ -36,7 +36,7 @@ const generateToken = async () => {
 const catchCompanies = async () => {
   try {
     const response = await fetch(
-      "https://api.insee.fr/entreprises/sirene/V3.11/siret?q=trancheEffectifsEtablissement%3A%5B42%20TO%2053%5D&nombre=100",
+      "https://api.insee.fr/entreprises/sirene/V3.11/siret?q=trancheEffectifsEtablissement%3A%5B42%20TO%2053%5D%20AND%20-categorieJuridiqueUniteLegale%3A4*%20OR%20-categorieJuridiqueUniteLegale%3A7*&nombre=1000",
 
       {
         headers: {

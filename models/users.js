@@ -61,7 +61,7 @@ const userSchema = mongoose.Schema({
     default: false,
   },
   company: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: "companies",
   },
 
