@@ -10,6 +10,7 @@ var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var companiesRouter = require("./routes/companies");
 var croneRouter = require("./routes/crone");
+var passwordsRouter = require("./routes/passwords");
 
 var app = express();
 
@@ -26,5 +27,6 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/companies", companiesRouter);
 app.use("/crone", croneRouter);
+app.use("/passwords", passwordsRouter);
 
 module.exports = app;
