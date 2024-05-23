@@ -122,7 +122,7 @@ const companySchema = mongoose.Schema({
     set: (v) => v.toLowerCase(),
     enum: ["", "a", "b", "c", "d", "e"],
   },
-  LogoEntreprise: {
+  companyLogo: {
     type: String,
     trim: true,
   },
@@ -130,6 +130,6 @@ const companySchema = mongoose.Schema({
   like: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
 });
 
-const company = mongoose.model("companies", companySchema);
+const Company = mongoose.model("companies", companySchema);
 
-module.exports = company;
+module.exports = Company;
