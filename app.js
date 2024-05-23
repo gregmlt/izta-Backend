@@ -11,8 +11,7 @@ var usersRouter = require("./routes/users");
 var companiesRouter = require("./routes/companies");
 var croneRouter = require("./routes/crone");
 var passwordsRouter = require("./routes/passwords");
-var fileUpload = require('express-fileupload');
-
+const fileUpload = require('express-fileupload');
 
 var app = express();
 
