@@ -44,39 +44,34 @@ router.post("/forgot-password", (req, res) => {
 });
 
 
-//Faire route post pour update le pwd
-router.put('/password-change/:token', (req, res) => {
+// PUT changement de mot de passe.//
+router.put('/password-change/:token', async (req, res) => {
   const token = req.params.token;
-  const newpassword = req.body.password;
+  const newPassword = req.body.password;
 
-  if (!newpassword) {
-    return res.json({ result: false, message: 'Mot de passe requis' });
+  if (!newPassword) {
+    return res.status(400).json({ result: false, message: 'Password is required' });
   }
 
-  const hash = bcrypt.hashSync(req.body.password, 10);
+  try {
+    const user = await User.findOne({ token: token });
 
-  User.findOne({ token: token }).then((user) => {
-
-//     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-//       res.json({ result: true, token: data.token });
-//     } else {
-//       res.json({ result: false, error: "Identifiant ou mot de passe erroné" });
-//     }
-//   });
-// });
-
-    if (user) {
-      user.password = newpassword;
-      user.save().then(() => {
-        res.json({ result: true, message: 'Mot de passe mis à jour' });
-      });
-    } else {
-      res.json({ result: false, message: 'Aucun utilisateur trouvé' });
+    if (!user) {
+      return res.json({ result: false, message: 'User not found' });
     }
 
-    
-  });
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    user.password = hashedPassword;
+    user.token = uid2(32); 
+
+    await user.save();
+    res.json({ result: true, message: 'Mot de passe mis à jour' });
+
+  } catch (err) {
+    res.json({ result: false, message: 'Erreur, modification non prise en compte', error: err.message });
+  }
 });
+
 
 module.exports = router;
 
