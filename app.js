@@ -11,6 +11,8 @@ var usersRouter = require("./routes/users");
 var companiesRouter = require("./routes/companies");
 var croneRouter = require("./routes/crone");
 var passwordsRouter = require("./routes/passwords");
+var fileUpload = require('express-fileupload');
+
 
 var app = express();
 
@@ -28,5 +30,7 @@ app.use("/users", usersRouter);
 app.use("/companies", companiesRouter);
 app.use("/crone", croneRouter);
 app.use("/passwords", passwordsRouter);
+app.use(fileUpload());
+
 
 module.exports = app;
