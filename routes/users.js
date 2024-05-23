@@ -53,6 +53,18 @@ router.post("/signin", (req, res) => {
   });
 });
 
+/* GET users data. */
+
+router.get('/infos/:token', (req, res) => {
+  const token = req.params.token;
+
+  User.findOne({ token: token }).then((data) => {
+    if (data) {
+      res.json({ result: true, data: data });
+    } else {
+      res.json({ result: false, message: 'User not found' });
+    }})});
+
 /* PUT users data. */
 
 router.put("/infos/:token", (req, res) => {
