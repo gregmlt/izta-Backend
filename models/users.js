@@ -70,6 +70,11 @@ const userSchema = mongoose.Schema({
   ],
   logo: {
     type: String,
+    trim: true,
+  },
+  linkedin: {
+    type: String,
+    trim: true,
   },
 });
 
