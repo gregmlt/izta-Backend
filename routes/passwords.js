@@ -20,7 +20,7 @@ router.post("/forgot-password", (req, res) => {
   // send mail with defined transport object
   const mailOptions = {
     from: process.env.NODEMAILER_EMAIL, // sender address
-    to: 'vecchmel@gmail.com', // list of receivers, ensure this is received from the request body
+    to: req.body.email, // list of receivers, ensure this is received from the request body
     subject: "Password Reset", // Subject line
     text: "You requested a password reset", // plain text body
     html: "<b>You requested a password reset</b>", // html body
