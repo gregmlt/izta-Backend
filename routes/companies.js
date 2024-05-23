@@ -5,6 +5,8 @@ const Company = require("../models/companies");
 const User = require("../models/users");
 const uniqid = require("uniqid");
 
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // ? Add a user to company's kudos
 
@@ -63,8 +65,7 @@ router.get("/get/like/:siret", async (req, res) => {
   }
 });
 
-
-// Route pour que les utilisateurs puissent uploader le logo de l'entreprise 
+// Route pour que les utilisateurs puissent uploader le logo de l'entreprise
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -72,9 +73,9 @@ cloudinary.config({
 });
 
 // Route pour uploader une photo et mettre à jour le logo de l'utilisateur
-router.post('/upload/:_id', async (req, res) => {
+router.post("/upload/:_id", async (req, res) => {
   if (!req.files || !req.files.photoFromFront) {
-    return res.status(400).json({ result: false, error: 'No file uploaded' });
+    return res.status(400).json({ result: false, error: "No file uploaded" });
   }
 
   const photoPath = `./tmp/${uniqid()}.jpg`;
@@ -85,19 +86,21 @@ router.post('/upload/:_id', async (req, res) => {
   }
 
   try {
-    const result = await cloudinary.uploader.upload(photoPath, { folder: 'user_logos' });
+    const result = await cloudinary.uploader.upload(photoPath, {
+      folder: "user_logos",
+    });
     return res.status(200).json({ result: true, url: result.secure_url });
   } catch (error) {
     return res.status(500).json({ result: false, error });
   }
 });
 
-router.put('/updatelogo/:_id', async (req, res) => {
+router.put("/updatelogo/:_id", async (req, res) => {
   const { token } = req.params;
   const { url } = req.body; // Assurez-vous que le corps de la requête contient l'URL de l'image uploadée
 
   if (!url) {
-    return res.json({ result: false, error: 'No URL provided' });
+    return res.json({ result: false, error: "No URL provided" });
   }
 
   try {
@@ -109,22 +112,17 @@ router.put('/updatelogo/:_id', async (req, res) => {
   }
 });
 
-
-
-
-
 // router.post('/upload', async (req, res) => {
 //  const photoPath = `./tmp/${uniqid()}.jpg`;
 //  const resultMove = await req.files.photoFromFront.mv(photoPath);
 
 //  if (!resultMove) {
 //    ...
-//    res.json({ result: true });      
+//    res.json({ result: true });
 //  } else {
 //    res.json({ result: false, error: resultMove });
 //  }
 // });
-
 
 // const cloudinary = require('cloudinary').v2;
 
@@ -139,7 +137,6 @@ router.put('/updatelogo/:_id', async (req, res) => {
 //   console.log(result);
 // });
 
-
 // router.put("/updatelogo/:token", (req, res) => {
 
 //   User.updateOne({ token: req.params.token }, { ...req.body }).then(() => {
@@ -148,6 +145,5 @@ router.put('/updatelogo/:_id', async (req, res) => {
 //     );
 //   });
 // });
-
 
 module.exports = router;

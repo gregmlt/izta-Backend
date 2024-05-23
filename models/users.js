@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  birthDate: {
+  birthdate: {
     type: Date,
   },
 
@@ -36,17 +36,12 @@ const userSchema = mongoose.Schema({
     trim: true,
   },
   diplome: {
-    type: String,
-    trim: true,
+    type: Map,
+    of: Boolean,
   },
   situation: {
-    type: String,
-    enum: [
-      "je me renseigne",
-      "je suis à l'écoute",
-      "je suis en recherche active",
-    ],
-    trim: true,
+    type: Map,
+    of: Boolean,
   },
   likedCompanies: [
     {
