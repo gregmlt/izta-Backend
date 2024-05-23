@@ -55,15 +55,17 @@ router.post("/signin", (req, res) => {
 
 /* GET users data. */
 
-router.get('/infos/:token', (req, res) => {
+router.get("/infos/:token", (req, res) => {
   const token = req.params.token;
 
   User.findOne({ token: token }).then((data) => {
     if (data) {
       res.json({ result: true, data: data });
     } else {
-      res.json({ result: false, message: 'User not found' });
-    }})});
+      res.json({ result: false, message: "User not found" });
+    }
+  });
+});
 
 /* PUT users data. */
 
@@ -78,8 +80,6 @@ router.put("/infos/:token", (req, res) => {
     postalCode,
     diplome,
     situation,
-    likedCompanies,
-    kudos,
   } = req.body;
 
   User.updateOne({ token: req.params.token }, { ...req.body }).then(() => {
@@ -89,7 +89,7 @@ router.put("/infos/:token", (req, res) => {
   });
 });
 
-// ? Like a company and add it in DB
+// ? Like/dislike a company and add/remove it in DB
 router.post("/like/:token/:idCompany", async (req, res) => {
   const companyId = req.params.idCompany;
   const token = req.params.token;
