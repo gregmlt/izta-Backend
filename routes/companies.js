@@ -69,7 +69,7 @@ router.get("/get/like/:siret", async (req, res) => {
 
 
 
-// Route pour que les utilisateurs puissent uploader le logo de l'entreprise 
+// Route pour que les utilisateurs puissent uploader le logo de l'entreprise
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
