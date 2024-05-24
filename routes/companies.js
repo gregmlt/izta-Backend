@@ -7,8 +7,6 @@ const uniqid = require("uniqid");
 
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
-const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
 
 // ? Add a user to company's kudos
 
@@ -166,10 +164,9 @@ router.put("/infos/:_id", (req, res) => {
   } = req.body;
   Company.updateOne({ _id }, { ...req.body }).then(() => {
     Company.findOne({ _id }).then((data) => {
-      console.log(data)
-      res.json({ result: true, data: data})
-    }
-    );
+      console.log(data);
+      res.json({ result: true, data: data });
+    });
   });
 });
 
