@@ -7,6 +7,8 @@ const uniqid = require("uniqid");
 
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // ? Add a user to company's kudos
 
@@ -65,6 +67,26 @@ router.get("/get/like/:siret", async (req, res) => {
   }
 });
 
+// ? Get the company for the connexion tunnel
+router.get("/get/:siret", async (req, res) => {
+  const siret = req.params.siret;
+  try {
+    const company = await Company.findOne({ siret });
+
+    if (company) {
+      return res.json({ result: true, company: company });
+    } else {
+      return res.json({ result: false, company: "company doesn't exist" });
+    }
+  } catch (error) {
+    console.error("Error finding a company :", error);
+    return res
+      .status(500)
+      .json({ result: false, message: "Internal server error" });
+  }
+});
+
+// Route pour que les utilisateurs puissent uploader le logo de l'entreprise
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
