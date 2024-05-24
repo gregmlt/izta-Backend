@@ -134,24 +134,6 @@ router.post("/like/:token/:idCompany", async (req, res) => {
   }
 });
 
-// ? Search a company with his SIRET number
-
-router.get("/get/:siret", async (req, res) => {
-  const siret = req.params.siret;
-  try {
-    const response = await Company.findOne({ siret });
-    response
-      ? res.json({ result: true, message: response })
-      : res.json({ result: false, message: "company not found" });
-    return;
-  } catch (error) {
-    console.error("Error liking/disliking company:", error);
-    return res
-      .status(500)
-      .json({ result: false, message: "Internal server error" });
-  }
-});
-
 // ? Add a company to an user account
 
 router.post("/post/:siret/:token", async (req, res) => {
@@ -161,13 +143,15 @@ router.post("/post/:siret/:token", async (req, res) => {
   try {
     const user = await User.findOne({ token });
 
+    // Verify user exist
     if (!user) {
       return res.json({ result: false, message: "User doesn't exist" });
     }
-
+    // Verify the company exist and take its ID
     const company = await Company.findOne({ siret });
     const companyID = company["_id"];
 
+    // Verify this user doesn't owned this company yet
     if (user.company.includes(companyID)) {
       return res.json({
         result: false,
@@ -175,6 +159,7 @@ router.post("/post/:siret/:token", async (req, res) => {
       });
     }
 
+    // Add company to the user account as a owner
     const addCompany = await User.updateOne(
       { token },
       { $push: { company: companyID } }
