@@ -58,7 +58,9 @@ router.post("/signin", (req, res) => {
 router.get("/infos/:token", (req, res) => {
   const token = req.params.token;
 
-  User.findOne({ token: token }).then((data) => {
+  User.findOne({ token: token })
+  .populate('likedCompanies')
+  .then((data) => {
     if (data) {
       res.json({ result: true, data: data });
     } else {
