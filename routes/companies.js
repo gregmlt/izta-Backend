@@ -5,9 +5,8 @@ const Company = require("../models/companies");
 const User = require("../models/users");
 const uniqid = require("uniqid");
 
-const cloudinary = require('cloudinary').v2;
-const fs = require('fs');
-
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
 // ? Add a user to company's kudos
 
@@ -66,46 +65,20 @@ router.get("/get/like/:siret", async (req, res) => {
   }
 });
 
-
-
-
-// Route pour que les utilisateurs puissent uploader le logo de l'entreprise
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloudinary_url: process.env.CLOUDINARY_URL,
 });
 
-// POST pour uploader une photo à checker demain 
-
-// router.post('/uploadlogo/:_id', async (req, res) => {
-//   if (!req.files || !req.files.photoFromFront) {
-//     return res.json({ result: false, error: 'Aucun logo téléchargé' });
-//   }
-
-//   const photoPath = `./tmp/${uniqid()}.jpg`;
-//   const resultMove = await req.files.photoFromFront.mv(photoPath);
-
-//   if (resultMove) {
-//     return res.json({ result: false, error: resultMove });
-//   }
-
-//   try {
-//     const result = await cloudinary.uploader.upload(photoPath, { folder: 'user_logos' });
-//     return res.json({ result: true, url: result.secure_url });
-//   } catch (error) {
-//     return res.json({ result: false, error });
-//   }
-// });
-
-
 // PUT pour updater un logo
-router.put('/updatelogo/:_id', async (req, res) => {
+router.put("/updatelogo/:_id", async (req, res) => {
   const { _id } = req.params;
-  const url  = req.body.companyLogo; // Assurez-vous que le corps de la requête contient l'URL de l'image uploadée
+  const url = req.body.companyLogo; // Assurez-vous que le corps de la requête contient l'URL de l'image uploadée
   console.log(url);
   if (!url) {
-    return res.json({ result: false, error: 'Aucune URL' });
+    return res.json({ result: false, error: "Aucune URL" });
   }
 
   try {
@@ -116,6 +89,5 @@ router.put('/updatelogo/:_id', async (req, res) => {
     return res.json({ result: false, error });
   }
 });
-
 
 module.exports = router;
