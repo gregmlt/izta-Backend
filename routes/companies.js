@@ -7,8 +7,6 @@ const uniqid = require("uniqid");
 
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
-const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
 
 // ? Add a user to company's kudos
 

@@ -224,7 +224,7 @@ router.get("/get/kudos/:token", async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error listing all kudos from a compant :", error);
+    console.error("Error listing all kudos from a company :", error);
     return res
       .status(500)
       .json({ result: false, message: "Internal server error" });
