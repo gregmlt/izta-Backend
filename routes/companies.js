@@ -7,8 +7,6 @@ const uniqid = require("uniqid");
 
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
-const cloudinary = require("cloudinary").v2;
-const fs = require("fs");
 
 // ? Add a user to company's kudos
 
@@ -39,31 +37,32 @@ router.post("/post/kudos/:siret/:token", async (req, res) => {
   }
 });
 
-// ? Get the number of kudos for a company
+// ? Get the number of kudos & like for a company
 
-router.get("/get/kudos/:siret", async (req, res) => {
-  const siret = req.params.siret;
-  const company = await Company.findOne({ siret });
-  const nbrKudos = company.kudos.length;
+router.get("/get/statistics/:token", async (req, res) => {
+  const { token } = req.params;
 
-  if (company) {
-    return res.json({ result: true, message: nbrKudos });
-  } else {
-    return res.json({ result: false, message: "Company doesn't exist" });
-  }
-});
+  try {
+    const user = await User.findOne({ token }).populate("company");
 
-// ? Get the number of like for a company
+    if (!user || !user.company.length) {
+      return res.json({
+        result: false,
+        message: "User or associated company not found",
+      });
+    }
 
-router.get("/get/like/:siret", async (req, res) => {
-  const siret = req.params.siret;
-  const company = await Company.findOne({ siret });
-  const nbrLike = company.like.length;
+    const company = user.company[0];
 
-  if (company) {
-    return res.json({ result: true, message: nbrLike });
-  } else {
-    return res.json({ result: false, message: "Company doesn't exist" });
+    const nbrKudos = company.kudos ? company.kudos.length : 0;
+    const nbrLike = company.like ? company.like.length : 0;
+
+    return res.json({ result: true, nbrKudos, nbrLike });
+  } catch (error) {
+    console.error("Error fetching company statistics:", error);
+    return res
+      .status(500)
+      .json({ result: false, message: "Internal server error" });
   }
 });
 
