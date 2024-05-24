@@ -126,6 +126,7 @@ const companySchema = mongoose.Schema({
     type: String,
     trim: true,
   },
+
   kudos: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   like: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
 });

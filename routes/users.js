@@ -81,7 +81,6 @@ router.put("/infos/:token", (req, res) => {
     diplome,
     situation,
   } = req.body;
-
   User.updateOne({ token: req.params.token }, { ...req.body }).then(() => {
     User.findOne({ token: req.params.token }).then((data) =>
       res.json({ result: true, data: data })
