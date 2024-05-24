@@ -202,4 +202,33 @@ router.post("/post/kudos/:siret/:token", async (req, res) => {
   }
 });
 
+// ? Get the kudos from a company
+
+router.get("/get/kudos/:token", async (req, res) => {
+  const { token } = req.params;
+  try {
+    const user = await User.findOne({ token }).populate({
+      path: "company",
+      populate: {
+        path: "kudos",
+        model: "users",
+      },
+    });
+
+    if (user.company[0].kudos.length > 0) {
+      return res.json({ result: true, kudos: user.company[0].kudos });
+    } else if (user.company[0].kudos.length === 0) {
+      return res.json({
+        result: false,
+        kudos: "There is no kudos for this company",
+      });
+    }
+  } catch (error) {
+    console.error("Error listing all kudos from a company :", error);
+    return res
+      .status(500)
+      .json({ result: false, message: "Internal server error" });
+  }
+});
+
 module.exports = router;
