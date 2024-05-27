@@ -152,14 +152,6 @@ router.post("/post/:siret/:token", async (req, res) => {
     const company = await Company.findOne({ siret });
     const companyID = company["_id"];
 
-    // Verify if the user doesn't owned A company
-    if (user.company) {
-      return res.json({
-        result: false,
-        message: "User owned already a company",
-      });
-    }
-
     // Verify this user doesn't owned THIS company yet
     if (user.company == companyID) {
       return res.json({
