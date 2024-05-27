@@ -161,7 +161,7 @@ router.post("/post/:siret/:token", async (req, res) => {
     }
 
     // Verify this user doesn't owned THIS company yet
-    if (user.company.includes(companyID)) {
+    if (user.company == companyID) {
       return res.json({
         result: false,
         message: "User already owns this company",
