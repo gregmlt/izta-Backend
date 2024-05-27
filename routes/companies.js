@@ -85,7 +85,7 @@ router.get("/get/:siret", async (req, res) => {
   }
 });
 
-// Route pour que les utilisateurs puissent uploader le logo de l'entreprise
+// PUT to update logo
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -93,7 +93,6 @@ cloudinary.config({
   cloudinary_url: process.env.CLOUDINARY_URL,
 });
 
-// PUT pour updater un logo
 router.put("/updatelogo/:_id", async (req, res) => {
   const { _id } = req.params;
   const url = req.body.companyLogo; // Assurez-vous que le corps de la requête contient l'URL de l'image uploadée
