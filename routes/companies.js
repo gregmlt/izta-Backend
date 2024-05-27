@@ -111,4 +111,64 @@ router.put("/updatelogo/:_id", async (req, res) => {
   }
 });
 
+/* GET company data. */
+
+router.get("/infos/:token", (req, res) => {
+  const { token } = req.params;
+
+  User.findOne({ token })
+    .populate("company")
+    .then((data) => {
+      console.log(data.company);
+      if (data.company.length > 0) {
+        if (data) {
+          res.json({ result: true, data: data.company });
+        } else {
+          res.json({ result: false, message: "User not found" });
+        }
+      } else {
+        res.json({ result: false, message: "Doesn't have a company" });
+      }
+    });
+});
+
+// PUT pour mettre a jour les informations d'entreprise
+
+router.put("/infos/:_id", (req, res) => {
+  const { _id } = req.params;
+  const {
+    CompanyName,
+    description,
+    website,
+    linkedin,
+    glassdoor,
+    welcometothejungle,
+    siren,
+    siret,
+    creationDate,
+    adress,
+    city,
+    postalCode,
+    employeeNumber,
+    industry,
+    labels,
+    pariteEntreprise,
+    pariteDirection,
+    ageMoyen,
+    ecartSalaire,
+    turnover,
+    mecenat,
+    territorialScore,
+    socialScore,
+    fiscalScore,
+    companyLogo,
+  } = req.body;
+  Company.updateOne({ _id }, { ...req.body }).then(() => {
+    Company.findOne({ _id }).then((data) => {
+      console.log(data);
+      res.json({ result: true, data: data });
+    });
+  });
+});
+
 module.exports = router;

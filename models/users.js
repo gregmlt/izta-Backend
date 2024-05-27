@@ -57,10 +57,12 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  company: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: "companies",
-  },
+  company: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "companies",
+    },
+  ],
 
   kudos: [
     {
