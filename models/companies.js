@@ -70,6 +70,10 @@ const companySchema = mongoose.Schema({
     // required: true,
     trim: true,
   },
+  region: {
+    type: String,
+    trim: true,
+  },
   employeeNumber: {
     type: String,
     // required: true,

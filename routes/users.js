@@ -59,14 +59,14 @@ router.get("/infos/:token", (req, res) => {
   const token = req.params.token;
 
   User.findOne({ token: token })
-  .populate('likedCompanies')
-  .then((data) => {
-    if (data) {
-      res.json({ result: true, data: data });
-    } else {
-      res.json({ result: false, message: "User not found" });
-    }
-  });
+    .populate("likedCompanies")
+    .then((data) => {
+      if (data) {
+        res.json({ result: true, data: data });
+      } else {
+        res.json({ result: false, message: "User not found" });
+      }
+    });
 });
 
 /* PUT users data. */
@@ -152,8 +152,16 @@ router.post("/post/:siret/:token", async (req, res) => {
     const company = await Company.findOne({ siret });
     const companyID = company["_id"];
 
-    // Verify this user doesn't owned this company yet
-    if (user.company.includes(companyID)) {
+    // Verify if the user doesn't owned A company
+    if (user.company) {
+      return res.json({
+        result: false,
+        message: "User owned already a company",
+      });
+    }
+
+    // Verify this user doesn't owned THIS company yet
+    if (user.company == companyID) {
       return res.json({
         result: false,
         message: "User already owns this company",
