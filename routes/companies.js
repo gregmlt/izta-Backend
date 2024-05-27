@@ -96,7 +96,6 @@ cloudinary.config({
 router.put("/updatelogo/:_id", async (req, res) => {
   const { _id } = req.params;
   const url = req.body.companyLogo; // Assurez-vous que le corps de la requête contient l'URL de l'image uploadée
-  console.log(url);
   if (!url) {
     return res.json({ result: false, error: "Aucune URL" });
   }
@@ -118,7 +117,6 @@ router.get("/infos/:token", (req, res) => {
   User.findOne({ token })
     .populate("company")
     .then((data) => {
-      console.log(data.company);
       if (data.company.length > 0) {
         if (data) {
           res.json({ result: true, data: data.company });

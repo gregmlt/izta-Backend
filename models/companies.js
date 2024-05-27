@@ -60,72 +60,76 @@ const companySchema = mongoose.Schema({
     // required: true,
     trim: true,
   },
-    city: {
-      type: String,
-      // required: true,
-      trim: true,
-    },
-    postalCode: {
-      type: Number,
-      // required: true,
-      trim: true,
-    },
-    employeeNumber: {
-      type: String,
-      // required: true,
-      trim: true,
-    },
-    industry: {
-      type: String,
-      trim: true,
-    },
-    labels: {
-      type: String,
-      trim: true,
-    },
-    pariteEntreprise: {
-      type: Number,
-      trim: true,
-    },
-    pariteDirection: {
-      type: Number,
-      trim: true,
-    },
-    ageMoyen: {
-      type: Number,
-      trim: true,
-    },
-    ecartSalaire: {
-      type: Number,
-      trim: true,
-    },
-    turnover: {
-      type: Number,
-      trim: true,
-    },
-    mecenat: {
-      type: String,
-      trim: true,
-    },
-    territorialScore: {
-      type: String,
-      set: (v) => v.toLowerCase(),
-      enum: ["", "a", "b", "c", "d", "e"],
-    },
-    socialScore: {
-      type: String,
-      set: (v) => v.toLowerCase(),
-      enum: ["", "a", "b", "c", "d", "e"],
-    },
-    fiscalScore: {
-      type: String,
-      set: (v) => v.toLowerCase(),
-      enum: ["", "a", "b", "c", "d", "e"],
-    },
-    companyLogo: {
-      type: String,
-      trim: true,
-    },
+  city: {
+    type: String,
+    // required: true,
+    trim: true,
+  },
+  postalCode: {
+    type: Number,
+    // required: true,
+    trim: true,
+  },
+  region: {
+    type: String,
+    trim: true,
+  },
+  employeeNumber: {
+    type: String,
+    // required: true,
+    trim: true,
+  },
+  industry: {
+    type: String,
+    trim: true,
+  },
+  labels: {
+    type: String,
+    trim: true,
+  },
+  pariteEntreprise: {
+    type: Number,
+    trim: true,
+  },
+  pariteDirection: {
+    type: Number,
+    trim: true,
+  },
+  ageMoyen: {
+    type: Number,
+    trim: true,
+  },
+  ecartSalaire: {
+    type: Number,
+    trim: true,
+  },
+  turnover: {
+    type: Number,
+    trim: true,
+  },
+  mecenat: {
+    type: String,
+    trim: true,
+  },
+  territorialScore: {
+    type: String,
+    set: (v) => v.toLowerCase(),
+    enum: ["", "a", "b", "c", "d", "e"],
+  },
+  socialScore: {
+    type: String,
+    set: (v) => v.toLowerCase(),
+    enum: ["", "a", "b", "c", "d", "e"],
+  },
+  fiscalScore: {
+    type: String,
+    set: (v) => v.toLowerCase(),
+    enum: ["", "a", "b", "c", "d", "e"],
+  },
+  companyLogo: {
+    type: String,
+    trim: true,
+  },
 
   kudos: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
   like: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
