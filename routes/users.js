@@ -71,22 +71,36 @@ router.get("/infos/:token", (req, res) => {
 
 /* GET all users */
 
+
 router.get("/", (req, res) => {
-  
-    const users = User.find()
+  User.find()
     .populate('company')
     .then((data) => {
-      if(data) {
-        res.json({ result: true, users: data});
+      if (data) {
+        res.json({ result: true, users: data });
       } else {
-        res.json({ result: false, error: "no users found"})
+        res.json({ result: false, error: "no users found" });
       }
-    })
-})
+    });
+});
+
+
+// router.get("/", (req, res) => {
+  
+//     const users = User.find()
+//     .populate('company')
+//     .then((data) => {
+//       if(data) {
+//         res.json({ result: true, users: data});
+//       } else {
+//         res.json({ result: false, error: "no users found"})
+//       }
+//     })
+// })
 
 
 // Route to update a user's isActive field
-router.put('/verification/:id', function(req, res) {
+router.put('/verification/:id', function (req, res) {
   const userId = req.params.id;
   const { verification } = req.body;
 
@@ -97,7 +111,7 @@ router.put('/verification/:id', function(req, res) {
   }
 
   User.findByIdAndUpdate(userId, updateData, { new: true })
-    .populate('companny')
+    .populate('company')
     .then(updatedUser => {
       if (!updatedUser) {
         return res.status(404).json({ message: 'User not found' });
