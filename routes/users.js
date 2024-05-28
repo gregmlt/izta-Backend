@@ -69,6 +69,48 @@ router.get("/infos/:token", (req, res) => {
     });
 });
 
+/* GET all users */
+
+router.get("/", (req, res) => {
+  
+    const users = User.find()
+    .populate('company')
+    .then((data) => {
+      if(data) {
+        res.json({ result: true, users: data});
+      } else {
+        res.json({ result: false, error: "no users found"})
+      }
+    })
+})
+
+
+// Route to update a user's isActive field
+router.put('/verification/:id', function(req, res) {
+  const userId = req.params.id;
+  const { verification } = req.body;
+
+  // Update the verification and clear the company array if verification is false
+  const updateData = { verification: verification };
+  if (!verification) {
+    updateData.company = [];
+  }
+
+  User.findByIdAndUpdate(userId, updateData, { new: true })
+    .populate('companny')
+    .then(updatedUser => {
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(updatedUser);
+    })
+    .catch(error => {
+      console.error('Error updating verification status:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    });
+});
+
+
 /* PUT users data. */
 
 router.put("/infos/:token", (req, res) => {
