@@ -157,8 +157,8 @@ const catchCompanies = async () => {
 
         const companySirenAPI = {
           companyName: e.uniteLegale?.denominationUniteLegale || "",
-          siren: String(e.siren),
-          siret: String(e.siret),
+          siren: e.siren,
+          siret: e.siret,
           creationDate: e.dateCreationEtablissement || "",
           adress: `${e.adresseEtablissement?.numeroVoieEtablissement || ""} ${
             e.adresseEtablissement?.typeVoieEtablissement || ""
