@@ -47,28 +47,26 @@ router.post("/forgot-password", (req, res) => {
 // PUT changement de mot de passe.//
 router.put('/password-change/:token', async (req, res) => {
   const token = req.params.token;
-  const newPassword = req.body.password;
+  const newPassword = req.body.newPassword;
 
   if (!newPassword) {
     return res.status(400).json({ result: false, message: 'Password is required' });
   }
 
   try {
-    const user = await User.findOne({ token: token });
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
 
-    if (!user) {
-      return res.json({ result: false, message: 'User not found' });
+    const result = await User.updateOne(
+      { password: hashedPassword }
+    );
+
+    if (result.nModified === 0) {
+      return res.status(404).json({ result: false, message: 'User not found or password is the same as the old one' });
     }
 
-    const hashedPassword = bcrypt.hashSync(newPassword, 10);
-    user.password = hashedPassword;
-    user.token = uid2(32); 
-
-    await user.save();
     res.json({ result: true, message: 'Mot de passe mis à jour' });
-
   } catch (err) {
-    res.json({ result: false, message: 'Erreur, modification non prise en compte', error: err.message });
+    res.status(500).json({ result: false, message: 'Erreur, modification non prise en compte', error: err.message });
   }
 });
 
