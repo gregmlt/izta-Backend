@@ -18,8 +18,9 @@ const sockets = async (io, socket) => {
         response = await Company.find({ companyName: data.query });
       }
     }
-
-    socket.emit("searchResults", { companies: response });
+    setTimeout(() => {
+      socket.emit("searchResults", { companies: response });
+    }, 500);
   });
 
   socket.on("searchDiscover", async (data) => {
