@@ -8,19 +8,23 @@ const uniqid = require("uniqid");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
-// Get all company ratings
-router.get("/ratings/:_id", (req, res) => {
-  const token = req.params.token;
+// Get top 3 companies ratings
+router.get('/top-rating', async (req, res) => {
+  try {
+    const topRatedCompanies = await Company.find()
+      .sort({ noteIzta: -1 }) // Trie par noteIZTA en ordre décroissant
+      .limit(3); // Limite les résultats à 3 entreprises
 
-  User.findOne({ id: _id })
-    .populate("likedCompanies")
-    .then((data) => {
-      if (data) {
-        res.json({ result: true, data: data });
-      } else {
-        res.json({ result: false, message: "User not found" });
-      }
-    });
+    // Vérifie si des entreprises ont été trouvées
+    if (topRatedCompanies.length > 0) {
+      res.json({ result: true, data: topRatedCompanies });
+    } else {
+      res.json({ result: false, message: 'Aucune entreprise trouvée' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des entreprises :', error);
+    res.status(500).json({ result: false, message: 'Erreur du serveur' });
+  }
 });
 
 // ? Add a user to company's kudos
