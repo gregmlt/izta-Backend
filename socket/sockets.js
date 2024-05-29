@@ -21,6 +21,15 @@ const sockets = async (io, socket) => {
 
     socket.emit("searchResults", { companies: response });
   });
+
+  socket.on("searchDiscover", async (data) => {
+    const response = await Company.find();
+
+    if (response) {
+      const sortedCompanies = response.sort((a, b) => b.noteIzta - a.noteIzta);
+      socket.emit("discoverResults", { companies: sortedCompanies });
+    }
+  });
 };
 
 module.exports = sockets;
