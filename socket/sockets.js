@@ -27,7 +27,9 @@ const sockets = async (io, socket) => {
 
     if (response) {
       const sortedCompanies = response.sort((a, b) => b.noteIzta - a.noteIzta);
-      socket.emit("discoverResults", { companies: sortedCompanies });
+      setTimeout(() => {
+        socket.emit("discoverResults", { companies: sortedCompanies });
+      }, 500);
     }
   });
 };
