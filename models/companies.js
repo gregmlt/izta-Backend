@@ -126,6 +126,9 @@ const companySchema = mongoose.Schema({
     set: (v) => v.toLowerCase(),
     enum: ["", "a", "b", "c", "d", "e"],
   },
+  noteIzta: {
+    type: Number,
+  },
   companyLogo: {
     type: String,
     trim: true,
