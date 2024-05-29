@@ -162,12 +162,26 @@ router.put("/infos/:_id", (req, res) => {
   } = req.body;
   Company.updateOne({ _id }, { ...req.body }).then(() => {
     Company.findOne({ _id }).then((data) => {
-      console.log(data);
       res.json({ result: true, data: data });
     });
   });
 });
 
+// ? Get all companies infos by id
+router.get("/get/company/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const response = await Company.findById(id);
+
+    if (response) {
+      res.json({ result: true, company: response });
+    } else {
+      res.json({ result: false, message: "no company find" });
+    }
+  } catch (error) {
+    return res.json({ result: false, error });
+  }
+});
+
 module.exports = router;
-
-
