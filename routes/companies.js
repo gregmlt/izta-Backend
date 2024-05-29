@@ -8,6 +8,21 @@ const uniqid = require("uniqid");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
+// Get all company ratings
+router.get("/ratings/:_id", (req, res) => {
+  const token = req.params.token;
+
+  User.findOne({ id: _id })
+    .populate("likedCompanies")
+    .then((data) => {
+      if (data) {
+        res.json({ result: true, data: data });
+      } else {
+        res.json({ result: false, message: "User not found" });
+      }
+    });
+});
+
 // ? Add a user to company's kudos
 
 router.post("/post/kudos/:siret/:token", async (req, res) => {
