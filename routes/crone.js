@@ -111,12 +111,52 @@ const generateToken = async () => {
   }
 };
 
+// ? Make random letter for scoring
+function getRandomLetter() {
+  const letters = ["A", "B", "C", "D", "E"];
+  const randomIndex = Math.floor(Math.random() * letters.length);
+  return letters[randomIndex];
+}
+
+// ? Fonction pour convertir une lettre en score numérique
+function letterToScore(letter) {
+  const scores = {
+    A: 5,
+    B: 4,
+    C: 3,
+    D: 2,
+    E: 1,
+  };
+  return scores[letter] || 0; // retourne 0 si la lettre n'est pas trouvée
+}
+
+//  ?Calculer la note IZTA
+function calculateIZTAScore(territorialScore, socialScore, fiscalScore) {
+  const territorialWeight = 2;
+  const socialWeight = 1;
+  const fiscalWeight = 1;
+
+  const territorialNumeric = letterToScore(territorialScore);
+  const socialNumeric = letterToScore(socialScore);
+  const fiscalNumeric = letterToScore(fiscalScore);
+
+  const weightedSum =
+    territorialNumeric * territorialWeight +
+    socialNumeric * socialWeight +
+    fiscalNumeric * fiscalWeight;
+
+  const totalWeight = territorialWeight + socialWeight + fiscalWeight;
+
+  const iztaScore = weightedSum / totalWeight;
+
+  return iztaScore;
+}
+
 // ? Call the INSEE API to have companies from 42 to 53 of ("trancheEffectifsUniteLegale")
 const catchCompanies = async () => {
   try {
     const response = await fetch(
       "https://api.insee.fr/entreprises/sirene/V3.11/siret?q=trancheEffectifsEtablissement%3A%5B42%20TO%2053%5D%20AND%20-categorieJuridiqueUniteLegale%3A4*%20OR%20-categorieJuridiqueUniteLegale%3A7*&nombre=1000",
-
       {
         headers: {
           Accept: "application/json",
@@ -147,13 +187,19 @@ const catchCompanies = async () => {
         };
 
         try {
-          companyScoring = await getScoring(siren);
+          // ! Need API Payment
+          // companyScoring = await getScoring(siren);
         } catch (scoringError) {
           console.error(
             `Error fetching scoring for SIREN ${siren}:`,
             scoringError
           );
         }
+
+        // Generate random scores
+        const territorialScore = getRandomLetter();
+        const socialScore = getRandomLetter();
+        const fiscalScore = getRandomLetter();
 
         const companySirenAPI = {
           companyName: e.uniteLegale?.denominationUniteLegale || "",
@@ -172,11 +218,19 @@ const catchCompanies = async () => {
             : "",
           employeeNumber:
             tranchEmp[e.trancheEffectifsEtablissement] || "Unknown",
+          territorialScore: territorialScore,
+          socialScore: socialScore,
+          fiscalScore: fiscalScore,
+          noteIzta: calculateIZTAScore(
+            territorialScore,
+            socialScore,
+            fiscalScore
+          ).toFixed(2), // Format to 2 decimal places
         };
 
         const newCompany = new Company({
           ...companySirenAPI,
-          ...companyScoring,
+          // ...companyScoring,
         });
         newCompany.save();
       }
@@ -189,43 +243,44 @@ const catchCompanies = async () => {
   }
 };
 
-const getScoring = async (siren) => {
-  try {
-    const response = await fetch(
-      `https://api.societe.com/api/v1/entreprise/${siren}/scoring`,
-      {
-        headers: {
-          "X-Authorization": "socapi 53858bbb73258f0e4b1c64217e786423",
-        },
-      }
-    );
+// ! Need API Payment
+// const getScoring = async (siren) => {
+//   try {
+//     const response = await fetch(
+//       `https://api.societe.com/api/v1/entreprise/${siren}/scoring`,
+//       {
+//         headers: {
+//           "X-Authorization": "socapi 53858bbb73258f0e4b1c64217e786423",
+//         },
+//       }
+//     );
 
-    const data = await response.json();
+//     const data = await response.json();
 
-    if (
-      response.ok &&
-      data.data &&
-      data.data["extra-financier"] &&
-      data.data["extra-financier"].score
-    ) {
-      return {
-        territorialScore:
-          data.data["extra-financier"].score["territorial"] || "",
-        socialScore: data.data["extra-financier"].score["social"] || "",
-        fiscalScore: data.data["extra-financier"].score["fiscal"] || "",
-      };
-    } else {
-      throw new Error("Scoring data is incomplete or missing");
-    }
-  } catch (error) {
-    console.error(`Error fetching scoring for SIREN ${siren}:`, error);
-    return {
-      territorialScore: "",
-      socialScore: "",
-      fiscalScore: "",
-    };
-  }
-};
+//     if (
+//       response.ok &&
+//       data.data &&
+//       data.data["extra-financier"] &&
+//       data.data["extra-financier"].score
+//     ) {
+//       return {
+//         territorialScore:
+//           data.data["extra-financier"].score["territorial"] || "",
+//         socialScore: data.data["extra-financier"].score["social"] || "",
+//         fiscalScore: data.data["extra-financier"].score["fiscal"] || "",
+//       };
+//     } else {
+//       throw new Error("Scoring data is incomplete or missing");
+//     }
+//   } catch (error) {
+//     console.error(`Error fetching scoring for SIREN ${siren}:`, error);
+//     return {
+//       territorialScore: "",
+//       socialScore: "",
+//       fiscalScore: "",
+//     };
+//   }
+// };
 
 // ? Function to get all the data
 const getData = async () => {
