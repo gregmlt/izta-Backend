@@ -15,7 +15,7 @@ const sockets = async (io, socket) => {
           response = await Company.find({ siret: data.query });
         }
       } else {
-        response = await Company.find({ companyName: data.query });
+        response = await Company.find({ companyName: { $regex: data.query } });
       }
     }
     setTimeout(() => {
