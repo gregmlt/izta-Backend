@@ -28,7 +28,12 @@ router.post("/signup", (req, res) => {
       });
 
       newUser.save().then((data) => {
-        res.json({ result: true, token: data.token });
+        res.json({
+          result: true,
+          token: data.token,
+          likedCompanies: data.likedCompanies,
+          kudos: data.kudos,
+        });
       });
     } else {
       res.json({ result: false, error: "User already exists" });
@@ -46,7 +51,12 @@ router.post("/signin", (req, res) => {
 
   User.findOne({ email: req.body.email }).then((data) => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true, token: data.token });
+      res.json({
+        result: true,
+        token: data.token,
+        likedCompanies: data.likedCompanies,
+        kudos: data.kudos,
+      });
     } else {
       res.json({ result: false, error: "Identifiant ou mot de passe erroné" });
     }
@@ -71,10 +81,9 @@ router.get("/infos/:token", (req, res) => {
 
 /* GET all users */
 
-
 router.get("/", (req, res) => {
   User.find()
-    .populate('company')
+    .populate("company")
     .then((data) => {
       if (data) {
         res.json({ result: true, users: data });
@@ -84,9 +93,8 @@ router.get("/", (req, res) => {
     });
 });
 
-
 // router.get("/", (req, res) => {
-  
+
 //     const users = User.find()
 //     .populate('company')
 //     .then((data) => {
@@ -98,9 +106,8 @@ router.get("/", (req, res) => {
 //     })
 // })
 
-
 // Route to update a user's isActive field
-router.put('/verification/:id', function (req, res) {
+router.put("/verification/:id", function (req, res) {
   const userId = req.params.id;
   const { verification } = req.body;
 
@@ -111,19 +118,18 @@ router.put('/verification/:id', function (req, res) {
   }
 
   User.findByIdAndUpdate(userId, updateData, { new: true })
-    .populate('company')
-    .then(updatedUser => {
+    .populate("company")
+    .then((updatedUser) => {
       if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found' });
+        return res.status(404).json({ message: "User not found" });
       }
       res.json(updatedUser);
     })
-    .catch(error => {
-      console.error('Error updating verification status:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    .catch((error) => {
+      console.error("Error updating verification status:", error);
+      res.status(500).json({ message: "Internal server error" });
     });
 });
-
 
 /* PUT users data. */
 
