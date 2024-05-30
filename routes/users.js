@@ -33,6 +33,7 @@ router.post("/signup", (req, res) => {
           token: data.token,
           likedCompanies: data.likedCompanies,
           kudos: data.kudos,
+          verification: data.verification,
         });
       });
     } else {
@@ -56,6 +57,7 @@ router.post("/signin", (req, res) => {
         token: data.token,
         likedCompanies: data.likedCompanies,
         kudos: data.kudos,
+        verification: data.verification,
       });
     } else {
       res.json({ result: false, error: "Identifiant ou mot de passe erroné" });
