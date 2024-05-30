@@ -29,7 +29,7 @@ router.post("/forgot-password", (req, res) => {
     from: process.env.NODEMAILER_EMAIL, // sender address
     to: req.body.email, // list of receivers, ensure this is received from the request body
     subject: "Modifiez votre mot de passe", // Subject line
-    text: "Vous avez oublié votre mot de passe. Cliquez sur le lien ci-dessous pour créer un nouveau mot de passe", // plain text body
+    text: "Vous avez oublié votre mot de passe. Cliquez sur le lien suivant pour créer un nouveau mot de passe: http://localhost:3001/resetpassword"
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
