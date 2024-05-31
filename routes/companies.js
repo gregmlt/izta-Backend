@@ -9,7 +9,7 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
 // Get top 3 companies ratings
-router.get('/top-rating', async (req, res) => {
+router.get("/top-rating", async (req, res) => {
   try {
     const topRatedCompanies = await Company.find()
       .sort({ noteIzta: -1 }) // Trie par noteIZTA en ordre décroissant
@@ -19,11 +19,11 @@ router.get('/top-rating', async (req, res) => {
     if (topRatedCompanies.length > 0) {
       res.json({ result: true, data: topRatedCompanies });
     } else {
-      res.json({ result: false, message: 'Aucune entreprise trouvée' });
+      res.json({ result: false, message: "Aucune entreprise trouvée" });
     }
   } catch (error) {
-    console.error('Erreur lors de la récupération des entreprises :', error);
-    res.status(500).json({ result: false, message: 'Erreur du serveur' });
+    console.error("Erreur lors de la récupération des entreprises :", error);
+    res.status(500).json({ result: false, message: "Erreur du serveur" });
   }
 });
 
@@ -131,21 +131,25 @@ router.put("/updatelogo/:_id", async (req, res) => {
 /* GET company data. */
 
 router.get("/infos/:token", (req, res) => {
-  const { token } = req.params;
+  try {
+    const { token } = req.params;
 
-  User.findOne({ token })
-    .populate("company")
-    .then((data) => {
-      if (data.company.length > 0) {
-        if (data) {
-          res.json({ result: true, data: data.company });
+    User.findOne({ token })
+      .populate("company")
+      .then((data) => {
+        if (data.company.length > 0) {
+          if (data) {
+            res.json({ result: true, data: data.company });
+          } else {
+            res.json({ result: false, message: "User not found" });
+          }
         } else {
-          res.json({ result: false, message: "User not found" });
+          res.json({ result: false, message: "Doesn't have a company" });
         }
-      } else {
-        res.json({ result: false, message: "Doesn't have a company" });
-      }
-    });
+      });
+  } catch (error) {
+    return res.json({ result: false, error });
+  }
 });
 
 // PUT pour mettre a jour les informations d'entreprise
