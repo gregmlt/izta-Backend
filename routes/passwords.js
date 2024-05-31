@@ -23,9 +23,9 @@ router.post("/forgot-password", async (req, res) => {
 
   const user = await User.findOne({ email: req.body.email });
 
-  const token = user.token;
+if (user) {
 
-  console.log(token);
+  const token = user.token;
 
   // send mail with defined transport object
   const mailOptions = {
@@ -44,7 +44,9 @@ router.post("/forgot-password", async (req, res) => {
       res.status(200).json({ message: "Email envoyé" });
     }
   });
-});
+} else {
+  return res.json({result : false, message : "User doesn't exist"})
+}});
 
 // PUT changement de mot de passe.//
 router.put("/password-change/:token", async (req, res) => {
